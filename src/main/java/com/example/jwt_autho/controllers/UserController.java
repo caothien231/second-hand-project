@@ -1,6 +1,7 @@
 package com.example.jwt_autho.controllers;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -9,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.jwt_autho.entities.Product;
 import com.example.jwt_autho.entities.User;
+import com.example.jwt_autho.services.ProductService;
 import com.example.jwt_autho.services.UserService;
 
 import java.util.List;
@@ -17,11 +20,15 @@ import java.util.List;
 @RequestMapping("/users")
 @RestController
 public class UserController {
-    private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private UserService userService;
+
+    // public UserController(UserService userService) {
+    //     this.userService = userService;
+    // }
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()") // if authenticated, can go this
@@ -39,5 +46,11 @@ public class UserController {
         List <User> users = userService.allUsers();
 
         return ResponseEntity.ok(users);
+    }
+    
+    @GetMapping("/{userId}/products")
+    public ResponseEntity<List<Product>> getUserProducts(Integer userId){
+        List<Product> products = productService.getProductsBySeller(userId);
+        return ResponseEntity.ok(products);
     }
 }

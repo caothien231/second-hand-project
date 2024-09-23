@@ -41,7 +41,7 @@ public class User implements UserDetails {
     private String password;
 
     // set Role on USer table
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
 

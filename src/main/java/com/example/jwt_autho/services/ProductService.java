@@ -57,10 +57,9 @@ public class ProductService {
     // Get products from a seller
     @Transactional
     public List<Product> getProductsBySeller(Integer sellerId) {
-        Optional<User> seller = userRepository.findById(sellerId);
-        if (seller.isEmpty()) {
-            throw new IllegalArgumentException("Seller not found");
-        }
-        return productRepository.findBySeller(seller.get());
+        User seller = userRepository.findById(sellerId)
+            .orElseThrow(() -> new IllegalArgumentException("Seller not found"));
+
+        return productRepository.findBySeller(seller);
     }
 }

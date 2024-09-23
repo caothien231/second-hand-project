@@ -33,7 +33,16 @@ public class ProductController {
     }
 
     @GetMapping("/")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> products = productService.getAllProducts();
+
+        if (products.isEmpty()) {
+            // Return 204 No Content if no products are found
+            return ResponseEntity.noContent().build();
+        }
+
+        // Return 200 OK with the list of products
+        return ResponseEntity.ok(products);
     }
+
 }
