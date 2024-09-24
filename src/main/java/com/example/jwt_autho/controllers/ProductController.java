@@ -48,22 +48,5 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    //api call when user like a product
-    @PostMapping("/{productId}/like")
-    public ResponseEntity<String> likeProduct(
-        @RequestParam Integer userId,
-        @PathVariable Integer productId
-    ) {
-        System.out.println("userId" + userId);
-        System.out.println("productId" + productId);
-        try {
-            System.out.println("Beginningggggggggggg");
-            userService.likeProduct(userId, productId);
-            System.out.println("Afterrrrrrrrr");
-            return ResponseEntity.ok("Product liked successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
 
 }

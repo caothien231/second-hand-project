@@ -16,9 +16,8 @@ import com.example.jwt_autho.repositories.UserRepository;
 
 import jakarta.transaction.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -87,5 +86,40 @@ public class UserService {
         
         // Save the user to persist the change in liked products
         userRepository.save(user); // This will now only save the user's changes without triggering a StackOverflowError
+    }
+
+    // unlike a product
+    @Transactional
+    public void unlikeProduct(Integer userId, Integer productId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        
+        // Check if the user has already liked the product
+        if (user.getLikedProducts().contains(product)) {
+            // Add the product to the user's liked products set
+            user.getLikedProducts().remove(product);
+            
+            // Add user to the product's likedByUsers set
+            product.getLikedByUsers().remove(user);
+        }else {
+            throw new IllegalArgumentException("Product not liked by user");
+        }
+        
+        // Save the user to persist the change in liked products
+        userRepository.save(user);
+    }
+
+    // get products that a user liked
+    @Transactional
+    public Set<Product> getLikedProducts(Integer userId) {
+        // Find the user by ID
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Return the liked products
+        return user.getLikedProducts();
     }
 }
