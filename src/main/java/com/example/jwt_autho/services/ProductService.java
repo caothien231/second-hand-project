@@ -59,7 +59,7 @@ public class ProductService {
     public List<Product> getProductsBySeller(Integer sellerId) {
         User seller = userRepository.findById(sellerId)
             .orElseThrow(() -> new IllegalArgumentException("Seller not found"));
-
+        
         return productRepository.findBySeller(seller);
     }
 }

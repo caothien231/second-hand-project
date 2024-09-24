@@ -52,4 +52,7 @@ public class UserService {
 
         return userRepository.save(user);
     }
+
+    // service for like a product
+    
 }

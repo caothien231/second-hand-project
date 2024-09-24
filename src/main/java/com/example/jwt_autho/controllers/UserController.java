@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +18,7 @@ import com.example.jwt_autho.services.UserService;
 
 import java.util.List;
 
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @RestController
 public class UserController {
 
@@ -49,8 +50,13 @@ public class UserController {
     }
     
     @GetMapping("/{userId}/products")
-    public ResponseEntity<List<Product>> getUserProducts(Integer userId){
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN', 'USER')")
+    public ResponseEntity<List<Product>> getUserProducts(@PathVariable Integer userId){
         List<Product> products = productService.getProductsBySeller(userId);
+        if (products.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Return 204 No Content if no products found
+        }
+
         return ResponseEntity.ok(products);
     }
 }
