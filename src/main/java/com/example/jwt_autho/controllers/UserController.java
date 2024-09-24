@@ -86,9 +86,17 @@ public class UserController {
         return ResponseEntity.ok("Product unliked successfully");
     }
 
+    // get the liked prodcut list 
     @GetMapping("/{userId}/liked-products")
     public ResponseEntity<Set<Product>> getLikedProducts(@PathVariable Integer userId) {
         Set<Product> likedProducts = userService.getLikedProducts(userId);
         return ResponseEntity.ok(likedProducts);
+    }
+
+    // user buy a product
+    @PostMapping("/{userId}/buy-product/{productId}")
+    public ResponseEntity<String> buyProduct(@PathVariable Integer userId, @PathVariable Integer productId) {
+        userService.buyProduct(userId, productId);
+        return ResponseEntity.ok("Product purchased successfully");
     }
 }

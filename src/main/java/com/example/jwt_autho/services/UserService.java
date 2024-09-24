@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.jwt_autho.dtos.RegisterUserDto;
 import com.example.jwt_autho.entities.Product;
+import com.example.jwt_autho.entities.ProductStatusEnum;
 import com.example.jwt_autho.entities.Role;
 import com.example.jwt_autho.entities.RoleEnum;
 import com.example.jwt_autho.entities.User;
@@ -121,5 +122,27 @@ public class UserService {
 
         // Return the liked products
         return user.getLikedProducts();
+    }
+
+    @Transactional
+    public void buyProduct(Integer userId, Integer productId) {
+        // Fetch user and product from repositories
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        // Check if the product is already sold
+        if (product.getStatus() == ProductStatusEnum.SOLD) {
+            throw new IllegalArgumentException("Product is already sold");
+        }
+
+        // Set the buyer and update product status
+        product.setBuyer(user);
+        product.setStatus(ProductStatusEnum.SOLD);
+
+        // Save the product (to update the buyer and status)
+        productRepository.save(product);
     }
 }
