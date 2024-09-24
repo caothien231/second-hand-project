@@ -44,4 +44,17 @@ public class Product {
     @ManyToMany(mappedBy = "likedProducts")
     @JsonIgnore
     private Set<User> likedByUsers = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return id != null && id.equals(product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31; // A constant or use an identifier like `id`
+    }
 }

@@ -57,7 +57,7 @@ public class User implements UserDetails {
     ///////////////
     // Many-to-many relationship for liked products
     @ManyToMany(fetch = FetchType.EAGER) // will reduce the performance
-    // @JsonIgnore // use this to ignore --> increase perfromance
+    @JsonIgnore // use this to ignore --> increase perfromance
     @JoinTable(
         name = "user_liked_products",
         joinColumns = @JoinColumn(name = "user_id"),
@@ -160,5 +160,18 @@ public class User implements UserDetails {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return id != null && id.equals(user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31; // A constant or use an identifier like `id`
     }
 }
