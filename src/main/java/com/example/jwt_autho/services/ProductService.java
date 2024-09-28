@@ -45,8 +45,24 @@ public class ProductService {
         product.setDescription(createProductDto.getDescription());
         product.setStatus(ProductStatusEnum.valueOf(createProductDto.getStatus())); // Handle the enum conversion
         product.setSeller(seller.get());
+        product.setDeleted(false);
+        product.setImageUrl(createProductDto.getImageUrl());
 
         return productRepository.save(product);
+    }
+
+    // delete a product (not physically delete the product)
+    @Transactional
+    public void deleteProductById(Integer productId) {
+        // Fetch the product by its ID
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        product.setDeleted(true);
+        product.setDeletedDate(new Date());
+        product.setStatus(ProductStatusEnum.UNAVAILABLE); // Handle the enum conversion
+
+        productRepository.save(product);
     }
 
     // Get all the products

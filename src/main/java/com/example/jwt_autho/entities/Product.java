@@ -1,7 +1,9 @@
 package com.example.jwt_autho.entities;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,6 +27,9 @@ public class Product {
     private double price;
     private String description;
 
+    @Column(nullable = true) 
+    private String imageUrl;
+
     // Product status: AVAILABLE, UNAVAILABLE, PENDING, SOLD
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -44,6 +49,15 @@ public class Product {
     @ManyToMany(mappedBy = "likedProducts")
     @JsonIgnore
     private Set<User> likedByUsers = new HashSet<>();
+
+    private boolean deleted = false; // Tracks whether the product is deleted
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Date createdDate; 
+
+    @UpdateTimestamp
+    private Date deletedDate;
 
     @Override
     public boolean equals(Object o) {

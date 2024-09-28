@@ -19,6 +19,8 @@ public class CreateProductDto {
     @Size(max = 500)
     private String description;
 
+    private String imageUrl;
+
     @NotNull
     private Integer sellerId;
 
