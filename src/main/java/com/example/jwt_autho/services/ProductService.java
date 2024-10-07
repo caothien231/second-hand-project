@@ -78,4 +78,10 @@ public class ProductService {
         
         return productRepository.findBySeller(seller);
     }
+
+    public Product getProductById(Integer productId) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        return product;
+    }
 }

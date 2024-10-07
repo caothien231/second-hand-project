@@ -2,6 +2,8 @@ package com.example.jwt_autho.services;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import com.example.jwt_autho.repositories.ProductRepository;
 import com.example.jwt_autho.repositories.RoleRepository;
 import com.example.jwt_autho.repositories.UserRepository;
 
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 
 import java.util.*;
@@ -41,6 +44,8 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private EmailService mailService;
 
     public List<User> allUsers() {
         List<User> users = new ArrayList<>();
@@ -50,7 +55,7 @@ public class UserService {
         return users;
     }
 
-        public User createAdministrator(RegisterUserDto input) {
+    public User createAdministrator(RegisterUserDto input) {
         Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.ADMIN);
 
         if (optionalRole.isEmpty()) {
@@ -125,7 +130,7 @@ public class UserService {
     }
 
     @Transactional
-    public void buyProduct(Integer userId, Integer productId) {
+    public ResponseEntity<String> buyProduct(Integer userId, Integer productId) {
         // Fetch user and product from repositories
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -144,5 +149,23 @@ public class UserService {
 
         // Save the product (to update the buyer and status)
         productRepository.save(product);
+
+        // Prepare data for email template
+        String userEmail = user.getEmail(); // Fetch user's email directly
+        String productName = product.getName(); // Fetch product name directly
+
+        Map<String, Object> templateModel = new HashMap<>();
+        templateModel.put("userName", user.getFullName()); // Populate user's name
+        templateModel.put("productName", productName);     // Populate product name
+
+        // Send the confirmation email using the mailService
+        try {
+            mailService.sendEmail(userEmail, "Purchase Confirmation", "thank-you-email", templateModel);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending email");
+        }
+
+        return ResponseEntity.ok("Purchase successful, confirmation email sent.");
     }
 }
