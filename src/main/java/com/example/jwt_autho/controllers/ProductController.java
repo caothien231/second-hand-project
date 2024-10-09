@@ -90,7 +90,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping("/get/{productId}")
     public ResponseEntity<Product> getProductById(@PathVariable Integer productId) {
         Product product = productService.getProductById(productId);
         return ResponseEntity.ok(product);
