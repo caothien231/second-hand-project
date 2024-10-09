@@ -5,6 +5,8 @@ Second Hand Project
 - Tech stack: java 17, Spring boot 3, Mysql, Postman, Maven
 - github: https://github.com/caothien231/second-hand-project
 - Use JWT to authentication and authorization, Role-Based Access Control, Password Hashing
+- Use google firebas to store product images uploaded from user.
+- Use SMTP for email hosting (sent confirmation email when user sign-up, buy products) 
 
 - Backend Setup:
     +Clone the repository.
@@ -12,7 +14,7 @@ Second Hand Project
     +Run the backend server using mvn spring-boot:run
     +The server runs on http://localhost:8005.
 
-    
+
 -------------Front-end-----------
 - Tech stack: javaScript, React-js, BootStrap, nodeJs
 - github: https://github.com/caothien231/second-hand-project-front-end
