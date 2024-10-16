@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing dependencies...
+      - mvn install -DskipTests
+  build:
+    commands:
+      - echo Build started on `date`
+      - mvn clean package
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Uploading JAR to S3...
+      # Replace "your-s3-bucket" with your S3 bucket name where artifacts will be stored
+      - aws s3 cp target/*.jar s3://cicd-second-hand-project-s3/builds/
+artifacts:
+  files:
+    - target/*.jar
+  discard-paths: yes
+
+cache:
+  paths:
+    - '/root/.m2/**/*'
