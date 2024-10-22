@@ -10,6 +10,7 @@ import com.example.jwt_autho.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import jakarta.mail.MessagingException;
 
 import java.util.*;
 
@@ -30,6 +31,10 @@ public class ProductService {
     private ProductRepository productRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EmailService mailService;
+    @Autowired
+    private OpenAiService openAiService;
 
     // Create new product
     @Transactional
@@ -39,6 +44,27 @@ public class ProductService {
             throw new IllegalArgumentException("Seller not found");
         }
 
+        boolean isLegal = openAiService.isProductDescriptionLegal(createProductDto.getDescription());
+
+        if (!isLegal) {
+            // Send an email notification to the seller if the product is flagged as illegal
+            String sellerEmail = seller.get().getEmail();
+            String productName = createProductDto.getName();
+    
+            Map<String, Object> templateModel = new HashMap<>();
+            templateModel.put("userName", seller.get().getFullName()); // Populate seller's name
+            templateModel.put("productName", productName);             // Populate product name
+    
+            try {
+                mailService.sendEmail(sellerEmail, "Illegal Product Alert", "illegal-product", templateModel);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+                throw new IllegalArgumentException("Error sending email regarding illegal product.");
+            }
+    
+            // Stop the process and prevent product creation in the database
+            throw new IllegalArgumentException("Product description is flagged as illegal.");
+        }
         Product product = new Product();
         product.setName(createProductDto.getName());
         product.setPrice(createProductDto.getPrice());
