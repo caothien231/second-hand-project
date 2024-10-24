@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <h1>Welcome, <span th:text="${userName}"></span>!</h1>
+    <p>Thank you for signing up. Please click the link below to confirm your account:</p>
+    <a th:href="@{${confirmationLink}}">Confirm Signup</a>
+</body>
+</html>

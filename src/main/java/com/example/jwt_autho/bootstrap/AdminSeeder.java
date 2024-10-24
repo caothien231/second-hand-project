@@ -12,7 +12,8 @@ import com.example.jwt_autho.entities.User;
 import com.example.jwt_autho.repositories.RoleRepository;
 import com.example.jwt_autho.repositories.UserRepository;
 
-import java.util.Optional;
+
+import java.util.*;
 
 @Component
 public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
@@ -34,11 +35,39 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        this.loadRoles();
         this.createSuperAdministrator();
+    }
+
+    // move the Roles Seeder into AdminSeeder
+    // cause to make sure the roles are created 
+    // befoer the admin user was created
+    private void loadRoles() {
+        System.out.println("RUNING ROLEeeeeeeeee SEEK.");
+        RoleEnum[] roleNames = new RoleEnum[] { RoleEnum.USER, RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN };
+        Map<RoleEnum, String> roleDescriptionMap = Map.of(
+            RoleEnum.USER, "Default user role",
+            RoleEnum.ADMIN, "Administrator role",
+            RoleEnum.SUPER_ADMIN, "Super Administrator role"
+        );
+
+        Arrays.stream(roleNames).forEach((roleName) -> {
+            Optional<Role> optionalRole = roleRepository.findByName(roleName);
+
+            optionalRole.ifPresentOrElse(System.out::println, () -> {
+                Role roleToCreate = new Role();
+
+                roleToCreate.setName(roleName);
+                roleToCreate.setDescription(roleDescriptionMap.get(roleName));
+
+                roleRepository.save(roleToCreate);
+            });
+        });
     }
 
     // auto create admin account when run the application
     private void createSuperAdministrator() {
+        System.out.println("RUNING ADMIN SEEK.");
         RegisterUserDto userDto = new RegisterUserDto();
         userDto.setFullName("Super Admin");
         userDto.setEmail("super.admin@email.com");
@@ -47,7 +76,13 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
         Optional<Role> optionalRole = roleRepository.findByName(RoleEnum.SUPER_ADMIN);
         Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail());
 
-        if (optionalRole.isEmpty() || optionalUser.isPresent()) {
+        if (optionalRole.isEmpty()) {
+            System.out.println("Role SUPER_ADMIN not found.");
+            return;
+        }
+    
+        if (optionalUser.isPresent()) {
+            System.out.println("User with email already exists.");
             return;
         }
 
@@ -58,5 +93,6 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
         user.setRole(optionalRole.get());
 
         userRepository.save(user);
+        System.out.println("Super Admin user created successfully.");
     }
 }

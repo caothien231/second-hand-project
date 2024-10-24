@@ -1,6 +1,8 @@
 package com.example.jwt_autho.services;
 
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +17,9 @@ import com.example.jwt_autho.entities.RoleEnum;
 import com.example.jwt_autho.entities.User;
 import com.example.jwt_autho.repositories.RoleRepository;
 import com.example.jwt_autho.repositories.UserRepository;
+import com.example.jwt_autho.services.EmailService;
+
+import jakarta.mail.MessagingException;
 
 @Service
 public class AuthenticationService {
@@ -26,16 +31,20 @@ public class AuthenticationService {
     
     private final AuthenticationManager authenticationManager;
 
+    private final EmailService mailService;
+
     public AuthenticationService(
         UserRepository userRepository,
         RoleRepository roleRepository,
         AuthenticationManager authenticationManager,
-        PasswordEncoder passwordEncoder
+        PasswordEncoder passwordEncoder,
+        EmailService mailService
     ) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.mailService = mailService;
     }
 
     public User signup(RegisterUserDto input) {
@@ -51,7 +60,24 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(input.getPassword()));
         user.setRole(optionalRole.get());
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        // Send a confirmation email to the user
+        Map<String, Object> templateModel = new HashMap<>();
+        templateModel.put("userName", savedUser.getFullName()); 
+        templateModel.put("email", savedUser.getEmail());    
+
+        try {
+            mailService.sendEmail(savedUser.getEmail(), "Welcome to Our Platform", "confirm-signup-email", templateModel);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+        return savedUser;
+    }
+
+    public void deleteUserById(Integer userId) {
+        userRepository.deleteById(userId);
     }
 
     public User authenticate(LoginUserDto input) {
