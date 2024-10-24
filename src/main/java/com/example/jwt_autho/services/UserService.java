@@ -105,58 +105,45 @@ public class UserService {
         
         // Check if the user has already liked the product
         if (user.getLikedProducts().contains(product)) {
-            // Add the product to the user's liked products set
             user.getLikedProducts().remove(product);
-            
-            // Add user to the product's likedByUsers set
             product.getLikedByUsers().remove(user);
         }else {
             throw new IllegalArgumentException("Product not liked by user");
         }
         
-        // Save the user to persist the change in liked products
         userRepository.save(user);
     }
 
     // get products that a user liked
     @Transactional
     public Set<Product> getLikedProducts(Integer userId) {
-        // Find the user by ID
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        // Return the liked products
         return user.getLikedProducts();
     }
 
     @Transactional
     public ResponseEntity<String> buyProduct(Integer userId, Integer productId) {
-        // Fetch user and product from repositories
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new IllegalArgumentException("Product not found"));
-
-        // Check if the product is already sold
         if (product.getStatus() == ProductStatusEnum.SOLD) {
             throw new IllegalArgumentException("Product is already sold");
         }
 
-        // Set the buyer and update product status
         product.setBuyer(user);
         product.setStatus(ProductStatusEnum.SOLD);
 
-        // Save the product (to update the buyer and status)
         productRepository.save(product);
 
-        // Prepare data for email template
-        String userEmail = user.getEmail(); // Fetch user's email directly
-        String productName = product.getName(); // Fetch product name directly
+        String userEmail = user.getEmail();
+        String productName = product.getName(); 
 
         Map<String, Object> templateModel = new HashMap<>();
-        templateModel.put("userName", user.getFullName()); // Populate user's name
-        templateModel.put("productName", productName);     // Populate product name
+        templateModel.put("userName", user.getFullName()); 
+        templateModel.put("productName", productName);   
 
         // Send the confirmation email using the mailService
         try {

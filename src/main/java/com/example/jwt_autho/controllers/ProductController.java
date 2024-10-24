@@ -43,26 +43,26 @@ public class ProductController {
     // using firebase to store product images for now (so comment out this api)
     // @PostMapping("/upload-image")
     // public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
-    //     // Validate the file (optional)
+    //     
     //     if (file.isEmpty()) {
     //         return ResponseEntity.badRequest().body("Please select a file to upload.");
     //     }
 
     //     try {
-    //         // Create the uploads directory if it doesn't exist
+    //         
     //         File uploadsDir = new File("uploads");
     //         if (!uploadsDir.exists()) {
     //             uploadsDir.mkdir();
     //         }
 
-    //         // Define the path for the uploaded file
+    //  
     //         String filePath = "uploads/" + file.getOriginalFilename();
     //         File destFile = new File(filePath);
             
-    //         // Save the file to the local filesystem
+    //         
     //         file.transferTo(destFile);
             
-    //         // Return the file path as the response
+    //         
     //         return ResponseEntity.ok(filePath);
     //     } catch (IOException e) {
     //         e.printStackTrace();
@@ -86,7 +86,6 @@ public class ProductController {
             return ResponseEntity.noContent().build();
         }
 
-        // Return 200 OK with the list of products
         return ResponseEntity.ok(products);
     }
 

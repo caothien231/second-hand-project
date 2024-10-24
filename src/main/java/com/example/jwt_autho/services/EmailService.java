@@ -26,13 +26,13 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
         Context context = new Context();
-        context.setVariables(templateModel); // Populate the template with dynamic data
+        context.setVariables(templateModel); 
 
-        String htmlContent = templateEngine.process(templateName, context); // Use the provided template
+        String htmlContent = templateEngine.process(templateName, context); 
 
         helper.setTo(toEmail);
         helper.setSubject(subject);
-        helper.setText(htmlContent, true); // Set the content as HTML
+        helper.setText(htmlContent, true);
 
         mailSender.send(message);
     }

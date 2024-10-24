@@ -31,9 +31,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // public UserController(UserService userService) {
-    //     this.userService = userService;
-    // }
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()") // if authenticated, can go this

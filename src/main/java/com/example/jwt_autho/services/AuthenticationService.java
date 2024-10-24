@@ -64,15 +64,13 @@ public class AuthenticationService {
 
         // Send a confirmation email to the user
         Map<String, Object> templateModel = new HashMap<>();
-        templateModel.put("userName", savedUser.getFullName()); // Populate user's name
-        templateModel.put("email", savedUser.getEmail());       // Populate user's email
+        templateModel.put("userName", savedUser.getFullName()); 
+        templateModel.put("email", savedUser.getEmail());    
 
         try {
-            // Assume `sendEmail` method is already implemented in the MailService
             mailService.sendEmail(savedUser.getEmail(), "Welcome to Our Platform", "confirm-signup-email", templateModel);
         } catch (MessagingException e) {
             e.printStackTrace();
-            // Handle the email sending failure case here, if necessary
         }
 
         return savedUser;

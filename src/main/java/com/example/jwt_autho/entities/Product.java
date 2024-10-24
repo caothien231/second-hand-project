@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "products")
-@Data // Generates getters, setters, toString, equals, and hashCode methods
-@NoArgsConstructor // Generates a no-args constructor
-@AllArgsConstructor // Generates an all-args constructor
+@Data 
+@NoArgsConstructor 
+@AllArgsConstructor 
 public class Product {
 
     @Id
@@ -33,8 +33,7 @@ public class Product {
     // Product status: AVAILABLE, UNAVAILABLE, PENDING, SOLD
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ProductStatusEnum status = ProductStatusEnum.AVAILABLE; // Default status is 'AVAILABLE'
-
+    private ProductStatusEnum status = ProductStatusEnum.AVAILABLE; 
     //Seller association
     @ManyToOne
     @JoinColumn(name = "seller_id", nullable = false)
@@ -43,14 +42,14 @@ public class Product {
     // Buyer association (if the product is sold)
     @ManyToOne
     @JoinColumn(name = "buyer_id")
-    private User buyer; // Optional, null if not sold
+    private User buyer; 
 
     // Many-to-many relationship with users who like the product
     @ManyToMany(mappedBy = "likedProducts")
     @JsonIgnore
     private Set<User> likedByUsers = new HashSet<>();
 
-    private boolean deleted = false; // Tracks whether the product is deleted
+    private boolean deleted = false; // Tracks whether the product is deleted, soft delete
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -69,6 +68,6 @@ public class Product {
 
     @Override
     public int hashCode() {
-        return 31; // A constant or use an identifier like `id`
+        return 31; 
     }
 }

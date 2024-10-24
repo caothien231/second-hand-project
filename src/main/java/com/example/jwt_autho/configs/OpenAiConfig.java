@@ -8,13 +8,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenAiConfig {
 
-    // @Value("${spring.ai.openai.api-key}")
-    // private String apiKey;
-
     @Bean
     public ChatClient chatClient(Builder builder) {
         return builder
-            // .apiKey(apiKey) // The API key is set here
             .build();
     }
 }

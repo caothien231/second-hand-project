@@ -52,7 +52,7 @@ public class AuthenticationController {
     @DeleteMapping("/user/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
         authenticationService.deleteUserById(userId);
-        return ResponseEntity.noContent().build(); // Return 204 No Content on successful deletion
+        return ResponseEntity.noContent().build(); 
     }
 
 }

@@ -23,8 +23,8 @@ import java.util.HashSet;
 @Table(name = "users")
 @Entity
 @Data
-@NoArgsConstructor // Generates a no-args constructor
-@AllArgsConstructor // Generates an all-args constructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -117,7 +117,6 @@ public class User implements UserDetails {
         return true;
     }
     
-    // Getters and setters
     public Integer getId() {
         return id;
     }
@@ -172,6 +171,6 @@ public class User implements UserDetails {
 
     @Override
     public int hashCode() {
-        return 31; // A constant or use an identifier like `id`
+        return 31;
     }
 }

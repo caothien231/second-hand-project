@@ -9,7 +9,6 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:env.properties")
 public class JwtAuthoApplication {
 
-	//testing git
 	public static void main(String[] args) {
 		SpringApplication.run(JwtAuthoApplication.class, args);
 		

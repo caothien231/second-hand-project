@@ -10,9 +10,9 @@ import java.util.Date;
 
 @Table(name = "roles")
 @Entity
-@Data // Generates getters, setters, toString, equals, and hashCode methods
-@NoArgsConstructor // Generates a no-args constructor
-@AllArgsConstructor // Generates an all-args constructor
+@Data 
+@NoArgsConstructor 
+@AllArgsConstructor 
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

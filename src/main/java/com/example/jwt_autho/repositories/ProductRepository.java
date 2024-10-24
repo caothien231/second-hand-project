@@ -13,9 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findByStatus(ProductStatusEnum status);
 
-    // Fetch products by seller
     List<Product> findBySeller(User seller);
 
-    // Optionally, if you also need to find by buyer, you can add this as well
     List<Product> findByBuyer(User buyer);
 }

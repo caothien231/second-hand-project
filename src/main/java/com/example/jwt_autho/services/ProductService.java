@@ -52,8 +52,8 @@ public class ProductService {
             String productName = createProductDto.getName();
     
             Map<String, Object> templateModel = new HashMap<>();
-            templateModel.put("userName", seller.get().getFullName()); // Populate seller's name
-            templateModel.put("productName", productName);             // Populate product name
+            templateModel.put("userName", seller.get().getFullName());
+            templateModel.put("productName", productName);   
     
             try {
                 mailService.sendEmail(sellerEmail, "Illegal Product Alert", "illegal-product", templateModel);
@@ -61,15 +61,13 @@ public class ProductService {
                 e.printStackTrace();
                 throw new IllegalArgumentException("Error sending email regarding illegal product.");
             }
-    
-            // Stop the process and prevent product creation in the database
             throw new IllegalArgumentException("Product description is flagged as illegal.");
         }
         Product product = new Product();
         product.setName(createProductDto.getName());
         product.setPrice(createProductDto.getPrice());
         product.setDescription(createProductDto.getDescription());
-        product.setStatus(ProductStatusEnum.valueOf(createProductDto.getStatus())); // Handle the enum conversion
+        product.setStatus(ProductStatusEnum.valueOf(createProductDto.getStatus()));
         product.setSeller(seller.get());
         product.setDeleted(false);
         product.setImageUrl(createProductDto.getImageUrl());
