@@ -33,3 +33,7 @@ Second Hand Project
 
 - Home Page
   ![image](https://github.com/user-attachments/assets/dfe6dd8f-0988-4417-8c1d-5f19e7e0c9c9)
+- Producr Detail Page
+![image](https://github.com/user-attachments/assets/656daeac-5377-45c8-8943-3498cf8da639)
+- Upload Product Page
+  ![image](https://github.com/user-attachments/assets/b9e9a7f2-00bc-4709-9c90-95a504dd6225)
